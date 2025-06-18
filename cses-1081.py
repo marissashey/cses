@@ -1,4 +1,6 @@
+import math 
 """
+results in TLEs, need to add memoization
 * map {factor: [nums with it as a factor]}
 - for num1=3 in list: get all factors: 
     -  set L,R = 1, num1=3
@@ -33,7 +35,7 @@ nums = list(map(int, data[1:]))
 # n, nums = 5, [3,14,15,7,9] # output = 7
 
 
-
+"""
 def commonDivisors(nums):
     factorMap = {}
     for num in nums:
@@ -41,7 +43,6 @@ def commonDivisors(nums):
         while left < right: 
             if (num/left).is_integer():
     
-            
                 factorMap.setdefault(int(left), []).append(num)
                 factorMap.setdefault(int(num/left), []).append(num)
                 
@@ -71,6 +72,26 @@ def commonDivisors(nums):
     
     print(maxKeyWith2)
     return maxKeyWith2
+"""
 
+def commonDivisors(nums):
+    factorMap = {}
+
+    for num in nums: 
+        cur_factors = []
+        for i in range(1, math.ceil(math.sqrt(num)) + 1):
+            if num % i == 0 and i not in cur_factors: 
+                factorMap.setdefault(i, []).append(num)
+                cur_factors.append(i)
+                if i != int(num/i):
+                    factorMap.setdefault(int(num/i), []).append(num)
+                    cur_factors.append(int(num/i))
+        
+    maxKeyWith2 = float('-inf')
+    for key, val in factorMap.items():
+        if len(val) >= 2: maxKeyWith2 = max(maxKeyWith2, key)
+    
+    print(maxKeyWith2)
+    return
 
 commonDivisors(nums)
